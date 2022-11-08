@@ -1,0 +1,7 @@
+.classpath
+.proyect
+/.settings/
+/bin/
+/target/
+hangman.zip
+PartidaControllerViejo.java
