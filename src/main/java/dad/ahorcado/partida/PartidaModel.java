@@ -191,9 +191,9 @@ public class PartidaModel {
 		boolean existe = false;
 		String rutaImagen = null;
 		try{
-			rutaImagen = ("hangman/" + getIndiceImagen() + ".png").toString();
+			rutaImagen = getClass().getResource("/hangman/" + getIndiceImagen() + ".png").toString();
 			@SuppressWarnings("unused")
-			String rutaImagenSiguiente = ("hangman/" + (getIndiceImagen()+1) + ".png").toString();
+			String rutaImagenSiguiente = getClass().getResource("/hangman/" + (getIndiceImagen()+1) + ".png").toString();
 			// esto es para que lanze excepción y se muestre la siguiente imagen en vez de que se muestre y volver a fallar para reiniciar
 			setIndiceImagen(getIndiceImagen() + 1);
 			setImagen(new Image(rutaImagen));
