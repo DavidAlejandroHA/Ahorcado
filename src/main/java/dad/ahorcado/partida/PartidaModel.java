@@ -1,5 +1,6 @@
 package dad.ahorcado.partida;
 
+import java.text.Normalizer;
 import java.util.Optional;
 
 import dad.ahorcado.AhorcadoApp;
@@ -68,7 +69,7 @@ public class PartidaModel {
 	 */
 	public void comprobarPalabra() {
 		String palabra = letrasTextoTextField.getValue();
-		if(palabra.equals(palabraElegida.getValue())) {
+		if(eliminarAcentos(palabra.toLowerCase()).equals(eliminarAcentos(palabraElegida.getValue().toLowerCase()))) {
 			for(int i = 0; i < palabraOculta.length(); i++) {
 				if(palabraOculta.charAt(i)=='_') {
 					++puntosValor;
@@ -89,8 +90,8 @@ public class PartidaModel {
 	 * En caso de acertar, se añade 1 punto al marcador.
 	 */
 	public void comprobarLetra() {
-		String letra = letrasTextoTextField.getValue().charAt(0) + "";
-		if(palabraElegida.get().contains(letra)) {
+		String letra = (letrasTextoTextField.getValue().charAt(0) + "").toLowerCase();
+		if(palabraElegida.get().toLowerCase().contains(letra)) {
 			revelarLetra(letra);
 		} else {
 			lanzarFallo(letra);
@@ -127,11 +128,14 @@ public class PartidaModel {
 	public String ocultarOEspaciarPalabra(String p, boolean ocultarOEspaciar) {
 		String s = ""; // true -> oculta // false -> espacia
 		for (int i = 0; i < p.trim().length(); i++) {
-			if (Character.isLetterOrDigit(p.charAt(i)) || (p.charAt(i) + "").equals("_")) {
+			if (Character.isLetter(p.charAt(i)) || (p.charAt(i) + "").equals("_")) {
 				s += ocultarOEspaciar ? "_" : p.charAt(i);
 				s += ocultarOEspaciar ? "" : " ";
 			} else if ((Character.isSpaceChar(p.charAt(i)))) {
-				s += " ";
+				s += ocultarOEspaciar ? " " : "  ";
+			} else if (Character.isDigit(p.charAt(i))) {
+				s += p.charAt(i);
+				s += ocultarOEspaciar ? "" : " ";
 			}
 		}
 		return s;
@@ -187,9 +191,9 @@ public class PartidaModel {
 		boolean existe = false;
 		String rutaImagen = null;
 		try{
-			rutaImagen = getClass().getResource("/hangman/" + getIndiceImagen() + ".png").toString();
+			rutaImagen = ("hangman/" + getIndiceImagen() + ".png").toString();
 			@SuppressWarnings("unused")
-			String rutaImagenSiguiente = getClass().getResource("/hangman/" + (getIndiceImagen()+1) + ".png").toString();
+			String rutaImagenSiguiente = ("hangman/" + (getIndiceImagen()+1) + ".png").toString();
 			// esto es para que lanze excepción y se muestre la siguiente imagen en vez de que se muestre y volver a fallar para reiniciar
 			setIndiceImagen(getIndiceImagen() + 1);
 			setImagen(new Image(rutaImagen));
@@ -208,7 +212,7 @@ public class PartidaModel {
 		char[] palabraArray = palabraOriginal.toCharArray();
 		char[] palabraOcultaArray = palabraOculta.toCharArray();
 		for (int i = 0; i < palabraOriginal.length(); i++) {
-			if ((palabraArray[i] + "").equals(l)) {
+			if (eliminarAcentos(palabraArray[i] + "").equals(eliminarAcentos(l)) && !Character.isDigit(palabraArray[i])) {
 				palabraOcultaArray[i] = palabraOriginal.charAt(i);
 				puntosJugadores.set(FXCollections.observableArrayList("Puntos:",(++puntosValor)+""));
 			}
@@ -216,10 +220,18 @@ public class PartidaModel {
 		
 		palabraOculta = new String(palabraOcultaArray);
 		palabraOcultadaEspaciada.set(ocultarOEspaciarPalabra(palabraOculta, false));
-		añadirLetraUsada(l);
+		if(!Character.isDigit(l.charAt(0))) {
+			añadirLetraUsada(eliminarAcentos(l)); // lo añade si no es un número. Los números no son ocultos por defecto
+		}
 		if(palabraOculta.equals(palabraOriginal)) {
 			nuevaPalabra(false);
 		}
+	}
+	
+	public String eliminarAcentos(String s) {
+		s = Normalizer.normalize(s, Normalizer.Form.NFD);
+	    s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+	    return s;
 	}
 	
 	public void nuevaPalabra(boolean primeraVez) {

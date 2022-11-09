@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import dad.ahorcado.AhorcadoApp;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,8 +57,10 @@ public class PalabrasController implements Initializable {
 		// bindings
 		palabrasList.itemsProperty().bindBidirectional(model.palabrasProperty());
 		model.seleccionPalabraProperty().bind(palabrasList.getSelectionModel().selectedItemProperty());
-		quitarButton.disableProperty().bind(model.seleccionPalabraProperty().isNull());
-		
+		quitarButton.disableProperty().bind(Bindings.when(model.seleccionPalabraProperty().isNull()
+																	.or(model.palabrasProperty().sizeProperty().lessThan(2)))
+																		.then(true)
+																		.otherwise(false));
 	}
 
 	public BorderPane getView() {
