@@ -1,6 +1,7 @@
 package dad.ahorcado.puntuaciones;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,7 +68,7 @@ public class Puntuacion implements Comparable<Puntuacion>{
 					.collect(Collectors.toList());
 	}
 	
-	public static void guardarPuntuaciones(String filename, Puntuacion p) throws Exception {
+	public static void guardarPuntuaciones(String filename, Puntuacion p) throws IOException{
 		Path path = new File(filename).toPath();
 		Files.writeString(path, "\n"+p.getNombre()+","+p.getPuntos(), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
 	}

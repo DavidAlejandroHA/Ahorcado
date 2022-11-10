@@ -15,6 +15,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -32,14 +34,14 @@ public class RootController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// load data
-		
 		palabras = palabrasController.getModel().cargarPalabras(palabras); // mete dentro de palabrasProperty todas las palabras del fichero
+		
 		partidaController.getModel().setPalabras(palabras);
 		palabrasController.getModel().setPalabras(palabras);
 		
 		List<Puntuacion> puntuacionesList;
 		try {
-			puntuacionesList = Puntuacion.loadPuntuaciones("puntuaciones/puntuaciones.csv");
+			puntuacionesList = Puntuacion.loadPuntuaciones("puntuaciones/puntuaciones.csv"); // alert
 			puntuaciones.addAll(puntuacionesList);
 		} catch (Exception e1) {
 			puntuaciones.add(new Puntuacion("Error al cargar las puntuaciones."));
@@ -56,12 +58,28 @@ public class RootController implements Initializable {
 		 * Esta servirá para añadir puntuaciones nuevas a esa property, y gracias al binding
 		 * bidireccional se actualiza la tabla del puntuacionesController
 		 */
-	
+		
 		palabrasTab.setContent(palabrasController.getView());
 		partidasTab.setContent(partidaController.getView());
 		puntuacionesTab.setContent(puntuacionesController.getView());
 		
-		partidaController.getModel().recargarDatos();
+		if(partidaController.getModel().palabrasProperty().get().size()>=1) { // Si no hay palabras
+			partidaController.recargarDatos();
+			partidaController.getModel().setPermitir(true);
+		} else {
+			avisoSinPalabras();
+		}
+	}
+	
+	private void avisoSinPalabras() {
+		Alert alerta = new Alert(AlertType.WARNING);
+		alerta.initOwner(AhorcadoApp.primaryStage);
+    	alerta.setTitle("Sin palabras para jugar");
+    	alerta.setHeaderText("La lista de palabras está vacía.");
+    	alerta.setContentText("Añade varias palabras a la lista y reinicia el programa para iniciar el juego.");
+    	/*Stage stage = (Stage) alerta.getDialogPane().getScene().getWindow();
+        stage.getIcons().setAll(AhorcadoApp.primaryStage.getIcons());*/
+    	alerta.showAndWait();
 	}
 	
 	@FXML 

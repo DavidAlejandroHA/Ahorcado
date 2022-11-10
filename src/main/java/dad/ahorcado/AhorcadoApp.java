@@ -12,7 +12,6 @@ public class AhorcadoApp extends Application {
 	private RootController rootController = new RootController();
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-			
 		primaryStage.setTitle("Juego del Ahorcado");
 		primaryStage.setScene(new Scene(rootController.getView()));
 		primaryStage.getIcons().add(new Image(AhorcadoApp.class.getResourceAsStream("/hangman/9.png")));
