@@ -24,6 +24,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 public class PartidaController implements Initializable {
 	
@@ -99,15 +100,23 @@ public class PartidaController implements Initializable {
 		if(model.isPermitir()) {
 			String letra = eliminarAcentos(textoTextField.textProperty().getValue()).toLowerCase();
 			if(letra.length()> 1) {
+				letraBoton.defaultButtonProperty().set(false);
+				resolverBoton.defaultButtonProperty().set(true);
 				model.setBotonLetraValor(true);
 				model.setBotonPalabraValor(false);
 			} else if (model.getLetrasJugadas().contains(eliminarAcentos(nv).toLowerCase()) && letra.length() == 1){
+				letraBoton.defaultButtonProperty().set(false);
+				resolverBoton.defaultButtonProperty().set(false);
 				model.setBotonLetraValor(true);
 				model.setBotonPalabraValor(true);
 			} else if (!model.getLetrasJugadas().contains(eliminarAcentos(nv).toLowerCase()) && letra.length() == 1){
+				letraBoton.defaultButtonProperty().set(true);
+				resolverBoton.defaultButtonProperty().set(false);
 				model.setBotonLetraValor(false);
 				model.setBotonPalabraValor(true);
 			}else {
+				letraBoton.defaultButtonProperty().set(false);
+				resolverBoton.defaultButtonProperty().set(false);
 				model.setBotonLetraValor(true);
 				model.setBotonPalabraValor(true);
 			}
@@ -208,8 +217,7 @@ public class PartidaController implements Initializable {
 	 * @param l : letra a añadir
 	 */
 	public void añadirLetraUsada(String l) {
-		letrasUsadas += letrasUsadas.length() > 0 ? " " + l : l;
-		//letrasUsadas = letrasUsadas.trim(); // elimina los espacios del inicio
+		letrasUsadas += letrasUsadas.length() > 0 ? " " + l : l; // evita añadir espacio en el inicio
 		model.setLetrasJugadas(letrasUsadas);
 	}
 	
@@ -219,6 +227,8 @@ public class PartidaController implements Initializable {
     	dialogo.setTitle("Game Over");
     	dialogo.setHeaderText("¡Has perdido!");
     	dialogo.setContentText("Introduce tu nombre para que figures junto a tu puntuación en los registros:");
+    	Stage stage = (Stage) dialogo.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(AhorcadoApp.class.getResourceAsStream("/hangman/9.png")));
 		Optional<String> nombre = dialogo.showAndWait();
 		model.setPuntos(puntosValor);
 		try {
@@ -242,6 +252,8 @@ public class PartidaController implements Initializable {
 			    	alerta.setTitle("Error en las puntuaciones");
 			    	alerta.setHeaderText("Error al guardar las puntuaciones. Al cerrar el programa la última puntuación añadida "
 							+ "recientemente no aparecerá en la lista.");
+			    	Stage stage_error = (Stage) alerta.getDialogPane().getScene().getWindow();
+			        stage_error.getIcons().add(new Image(AhorcadoApp.class.getResourceAsStream("/hangman/9.png")));
 			    	alerta.showAndWait();
 				}
 			}
@@ -301,11 +313,13 @@ public class PartidaController implements Initializable {
 	
 	public void nuevaPalabra(boolean primeraVez) {
 		if(!primeraVez) {
-			Alert dialogo = new Alert(AlertType.INFORMATION);
-	    	dialogo.initOwner(AhorcadoApp.primaryStage);
-	    	dialogo.setTitle("Palabra acertada");
-	    	dialogo.setHeaderText("¡Has acertado la palabra!");
-	    	dialogo.showAndWait();
+			Alert alerta = new Alert(AlertType.INFORMATION);
+	    	alerta.initOwner(AhorcadoApp.primaryStage);
+	    	alerta.setTitle("Palabra acertada");
+	    	alerta.setHeaderText("¡Has acertado la palabra!");
+	    	Stage stage = (Stage) alerta.getDialogPane().getScene().getWindow();
+	        stage.getIcons().add(new Image(AhorcadoApp.class.getResourceAsStream("/hangman/9.png")));
+	    	alerta.showAndWait();
 		}
 		
 		int rand = (int) (Math.random() * model.getPalabras().size());

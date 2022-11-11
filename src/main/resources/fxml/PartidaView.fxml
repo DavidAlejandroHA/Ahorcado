@@ -50,7 +50,7 @@
          </GridPane.margin>
          <children>
             <TextField fx:id="textoTextField" HBox.hgrow="SOMETIMES" />
-            <Button fx:id="letraBoton" mnemonicParsing="false" onAction="#onLetra" text="Letra" />
+            <Button fx:id="letraBoton" defaultButton="true" mnemonicParsing="false" onAction="#onLetra" text="Letra" />
             <Button fx:id="resolverBoton" mnemonicParsing="false" onAction="#onResolver" text="Resolver" />
          </children>
       </HBox>

@@ -17,8 +17,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.Stage;
 
 public class RootController implements Initializable {
 	
@@ -77,8 +79,8 @@ public class RootController implements Initializable {
     	alerta.setTitle("Sin palabras para jugar");
     	alerta.setHeaderText("La lista de palabras está vacía.");
     	alerta.setContentText("Añade varias palabras a la lista y reinicia el programa para iniciar el juego.");
-    	/*Stage stage = (Stage) alerta.getDialogPane().getScene().getWindow();
-        stage.getIcons().setAll(AhorcadoApp.primaryStage.getIcons());*/
+    	Stage stage = (Stage) alerta.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(AhorcadoApp.class.getResourceAsStream("/hangman/9.png"))); // AhorcadoApp.primaryStage.getIcons() aún es nulo porque rootcontroller se inicia antes
     	alerta.showAndWait();
 	}
 	

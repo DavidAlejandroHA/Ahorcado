@@ -18,7 +18,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 public class PalabrasController implements Initializable {
 	
@@ -74,6 +76,8 @@ public class PalabrasController implements Initializable {
 		dialogo.initOwner(AhorcadoApp.primaryStage);
 		dialogo.setTitle("Añadir nueva palabra");
 		dialogo.setHeaderText("Añade una nueva palabra a la lista");
+		Stage stage = (Stage) dialogo.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(AhorcadoApp.class.getResourceAsStream("/hangman/9.png")));
 		Optional<String> textoDialogo = dialogo.showAndWait();
 		if(textoDialogo.isPresent() && !textoDialogo.get().isBlank() && !model.palabrasProperty().stream().anyMatch(p -> textoDialogo.get().equals(p))) {
 			model.palabrasProperty().add(textoDialogo.get());
